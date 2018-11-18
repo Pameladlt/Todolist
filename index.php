@@ -9,7 +9,7 @@
 	if (isset($_POST['submit'])) {
 
 		if (empty($_POST['task'])) {
-			$errors = "You must fill in the task";
+			$errors = "Porfavor Ingresa una tarea";
 		}else{
 			$task = $_POST['task'];
 			$query = "INSERT INTO tasks (task) VALUES ('$task')";
@@ -26,7 +26,19 @@
 		header('location: index.php');
 	}
 
-	// select all tasks if page is visited or refreshed
+	//COMPLETE TASK
+
+// insert a quote if submit button is clicked
+    if (isset($_POST['task'])) {
+    $task = $_POST['task'];
+
+        $query = "INSERT INTO com (task) VALUES ('$task')";
+        mysqli_query($db, $query);
+
+        header('location: index.php');
+}
+
+// select all tasks if page is visited or refreshed
 	$tasks = mysqli_query($db, "SELECT * FROM tasks");
 
 ?>
@@ -41,7 +53,7 @@
 <body>
 
 	<div class="heading">
-		<h2 style="font-style: 'Hervetica';">ToDo List Application PHP and MySQL database</h2>
+		<h2 style="font-style: 'Hervetica';">MyLista</h2>
 	</div>
 
 
@@ -50,7 +62,7 @@
 			<p><?php echo $errors; ?></p>
 		<?php } ?>
 		<input type="text" name="task" class="task_input">
-		<button type="submit" name="submit" id="add_btn" class="add_btn">Add Task</button>
+		<button type="submit" name="submit" id="add_btn" class="add_btn">Agregar Tarea</button>
 	</form>
 
 
@@ -69,8 +81,9 @@
 					<td> <?php echo $i; ?> </td>
 					<td class="task"> <?php echo $row['task']; ?> </td>
 					<td class="delete"> 
-						<a href="index.php?del_task=<?php echo $row['id'] ?>">x</a> 
-					</td>
+						<a href="index.php?del_task=<?php echo $row['id'] ?>">x</a>
+                        <a href="index.php?cel_task=<?php echo $row['id'] ?>">c</a>
+                    </td>
 				</tr>
 			<?php $i++; } ?>	
 		</tbody>
