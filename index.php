@@ -1,45 +1,57 @@
 <?php 
-	
-	$errors = "";
 
+	$errors = "";
 	// connect to database
 	$db = mysqli_connect("localhost", "root", "", "todo");
-
-	// insert a quote if submit button is clicked
-	if (isset($_POST['submit'])) {
-
-		if (empty($_POST['task'])) {
+/*---------------------------------------------------------------------------------------------------------------------*/
+    // insert a quote if submit button is clicked
+        function InsertTask($task){
+            $query = "INSERT INTO task (task) VALUES ('$task')";
+            return ($query);
+        }   
+        if (isset($_POST['submit'])) {
+             	if (empty($_POST['task'])) {
 			$errors = "Porfavor Ingresa una tarea";
 		}else{
-			$task = $_POST['task'];
-			$query = "INSERT INTO tasks (task) VALUES ('$task')";
-			mysqli_query($db, $query);
-			header('location: index.php');
-		}
-	}	
-
+                    mysqli_query($db,InsertTask($_POST['task']));
+                    header('location: index.php');
+                }
+            }
+/*---------------------------------------------------------------------------------------------------------------------*/                                       
 	// delete task
+        function DeleteTask($id){
+            $query="DELETE FROM task WHERE id=".$id;
+            return ($query);
+        }    
 	if (isset($_GET['del_task'])) {
-		$id = $_GET['del_task'];
-
-		mysqli_query($db, "DELETE FROM tasks WHERE id=".$id);
+		mysqli_query($db, DeleteTask($_GET['del_task']));
 		header('location: index.php');
 	}
-
+/*---------------------------------------------------------------------------------------------------------------------*/
 	//COMPLETE TASK
-
 // insert a quote if submit button is clicked
-    if (isset($_POST['task'])) {
-    $task = $_POST['task'];
-
-        $query = "INSERT INTO com (task) VALUES ('$task')";
-        mysqli_query($db, $query);
-
+        function CompleteTask($task){
+            $query = "INSERT INTO com (task) VALUES ('$task')";
+            return($query);
+        } 
+    if (isset($_POST['cel_task'])) {
+        mysqli_query($db, CompleteTask($_POST['task']));
         header('location: index.php');
-}
-
+    }
+//        if (isset($_POST['cel_task'])) {
+//            $task = $_POST['task'];
+//            $query = "INSERT INTO com (task) VALUES ('$task')";
+//            mysqli_query($db, $query);
+//            header('location: index.php');
+//	}
+/*---------------------------------------------------------------------------------------------------------------------*/
 // select all tasks if page is visited or refreshed
-	$tasks = mysqli_query($db, "SELECT * FROM tasks");
+        function ShowTasks(){
+            $query = "SELECT * FROM task";
+            return($query);
+        }
+	$tasks = mysqli_query($db, ShowTasks());
+	
 
 ?>
 <!DOCTYPE html>
@@ -47,7 +59,7 @@
 
 <head>
 	<title>ToDo List Application PHP and MySQL</title>
-	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" type="text/css" href="../other/style.css">
 </head>
 
 <body>
@@ -82,7 +94,7 @@
 					<td class="task"> <?php echo $row['task']; ?> </td>
 					<td class="delete"> 
 						<a href="index.php?del_task=<?php echo $row['id'] ?>">x</a>
-                        <a href="index.php?cel_task=<?php echo $row['id'] ?>">c</a>
+                                                <a href="index.php?cel_task=<?php echo $row['id'] ?>">c</a>
                     </td>
 				</tr>
 			<?php $i++; } ?>	
